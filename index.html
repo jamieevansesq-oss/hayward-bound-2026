@@ -4,30 +4,57 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hayward Bound 2026</title>
-    <meta
-      name="description"
-      content="Hayward Bound 2026. A summer garden party with special guests Peculiar Pizza. RSVP, send your dietary requirements, and join the live playlist."
-    />
+    <meta name="description" content="Hayward Bound 2026. A summer garden party with special guests Peculiar Pizza. RSVP, send your dietary requirements, and join the live playlist." />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      html {
-        scroll-behavior: smooth;
-      }
-
+      html { scroll-behavior: smooth; }
       body {
         background:
           radial-gradient(circle at top, rgba(255, 120, 90, 0.22), transparent 28%),
           linear-gradient(180deg, #071923 0%, #0c2430 30%, #131a2d 68%, #1b1030 100%);
       }
+      @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+      }
+      .wu-spin { animation: spin-slow 18s linear infinite; }
+
+      /* Spotify tooltip */
+      .spotify-wrap { position: relative; display: inline-flex; }
+      .spotify-wrap .tip {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        background: #0f172a;
+        color: #a5f3fc;
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(165,243,252,0.2);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s;
+      }
+      .spotify-wrap:hover .tip,
+      .spotify-wrap:focus-within .tip { opacity: 1; }
     </style>
   </head>
   <body class="relative min-h-screen overflow-x-hidden text-white">
+
+    <!-- Wu-Tang logo top left, rotating -->
+    <div class="pointer-events-none fixed left-4 top-4 z-50 opacity-80" aria-hidden="true">
+      <img
+        src="data:image/jpeg;base64,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6ehl3fqVhEU1MUEREAREQBERAEREAREQBERAEREAQOIKIgM8x8053eZWEQGeY5zlA93TqVhbxtDnAEKqBOP2WO2xvW5OoNaVsRdT6coPstK4joaifoceoYHf1Kz8DAUeuB3ar/hBw6WQXWNtJX30G7XF8hDeT3oHu2uJ8ow36kr3e5XGPtHtYyVl/wBYW+vrYs/8haHfbpy4fq/Blrf5nBcwbZU8htBtBV9kpSnGL3FonpouuvLnqTzHOjZ2ce8kk3xfxO6srjuutw9M7aWOS769vlvsduiH6aqmDS8+TG/ee70aCVXpu57VG+XZs9Fs1p2nsULstFzuxFTUEebYh+bYfnzqFuutx9Tbk3qS7a7vtyvlwkP6atnMnKPJoPRo9AAFncF2R3VVqeSnuR/quL+L5I8l5tDTjworV+JNfiL9ppXXuOqsewVPPaKR2Y5NQ1cYFTIPOCPqIh+87LvRqgbcrpWXevnrbrVVFZWVUhknqJ5DI+V57uc49SfUr8pcT3WFu3E4SwxVDubSmorr4v1ZFri7q3Et6o9RkoiLKHnCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiALeGd8EjZIiA5hBacditEQHL9W7v6314Gt1jqu/XeNjeVsNVXyPjaO2AzPKB08AuJGVx7rVFbCEYLSK0KuTfMzzFYJyiK/VsoERFQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAf/Z"
+        alt=""
+        class="wu-spin h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover drop-shadow-[0_0_12px_rgba(255,200,0,0.4)]"
+      />
+    </div>
+
+    <!-- Background watermark SVG -->
     <div class="pointer-events-none absolute inset-0 overflow-hidden">
-      <svg
-        viewBox="0 0 600 600"
-        class="absolute -right-20 top-24 h-[26rem] w-[26rem] opacity-[0.06] blur-[0.4px] sm:h-[34rem] sm:w-[34rem]"
-        aria-hidden="true"
-      >
+      <svg viewBox="0 0 600 600" class="absolute -right-20 top-24 h-[26rem] w-[26rem] opacity-[0.06] blur-[0.4px] sm:h-[34rem] sm:w-[34rem]" aria-hidden="true">
         <circle cx="300" cy="300" r="250" fill="none" stroke="white" stroke-width="22" />
         <path d="M240 150 L240 450" fill="none" stroke="white" stroke-width="22" stroke-linecap="square" />
         <path d="M360 150 L360 450" fill="none" stroke="white" stroke-width="22" stroke-linecap="square" />
@@ -38,37 +65,27 @@
 
     <div class="mx-auto max-w-6xl px-6 py-8 sm:px-8 lg:px-10">
       <header class="mb-10 flex items-center justify-between rounded-full border border-white/10 bg-white/5 px-5 py-3 backdrop-blur">
-        <div>
+        <div class="pl-14 sm:pl-16">
           <p class="text-xs uppercase tracking-[0.35em] text-white/60">Hayward Bound 2026</p>
           <p class="text-sm text-white/80">Summer Garden Party • 4 July • From 2PM</p>
         </div>
-        <a
-          href="#rsvp"
-          class="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium transition hover:bg-white/20"
-        >
-          RSVP Now
-        </a>
+        <a href="#rsvp" class="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium transition hover:bg-white/20">RSVP Now</a>
       </header>
 
       <section class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
         <div class="space-y-6 py-8">
-          <p class="inline-flex rounded-full border border-pink-300/20 bg-pink-300/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.35em] text-pink-100">
-            The Summer Gathering 2026
-          </p>
-
+          <p class="inline-flex rounded-full border border-pink-300/20 bg-pink-300/10 px-4 py-2 text-xs font-medium uppercase tracking-[0.35em] text-pink-100">The Summer Gathering 2026</p>
           <div class="space-y-4">
             <h1 class="text-5xl font-black uppercase leading-none tracking-tight sm:text-7xl">
               Hayward
-              <span class="block bg-gradient-to-r from-pink-200 via-orange-200 to-cyan-200 bg-clip-text text-transparent">
-                Bound 2026
-              </span>
+              <span class="block bg-gradient-to-r from-pink-200 via-orange-200 to-cyan-200 bg-clip-text text-transparent">Bound 2026</span>
             </h1>
             <p class="max-w-2xl text-lg leading-8 text-white/80 sm:text-xl">
-              A summer garden party with sunset energy, good people, and a triumphant return from
-              <span class="font-semibold text-orange-200"> Peculiar Pizza</span>. IFKYK.
+              Annual Hayward summer gathering.
+              <a href="https://www.facebook.com/p/Peculiar-Pizza-61577954189484/" target="_blank" rel="noreferrer" class="font-semibold text-orange-200 underline decoration-orange-200/40 underline-offset-2 hover:decoration-orange-200 transition-all">Peculiar Pizza</a>,
+              good people, and good tunes.
             </p>
           </div>
-
           <div class="grid max-w-2xl gap-4 sm:grid-cols-3">
             <div class="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur">
               <p class="text-xs uppercase tracking-[0.3em] text-white/50">Date</p>
@@ -83,22 +100,9 @@
               <p class="mt-2 text-lg font-semibold">All the good people — together</p>
             </div>
           </div>
-
           <div class="flex flex-wrap gap-3 pt-2">
-            <a
-              href="#rsvp"
-              class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]"
-            >
-              RSVP + Add Your Tune
-            </a>
-            <a
-              href="https://open.spotify.com/playlist/5zoLTvPiOJmtddXp5974LU?si=iznxLaADSxehnSsx9tlPxg&pt=e7c4ecf5fb827eac9505e95994d8458e&pi=sujaHzBpT0SQ0"
-              target="_blank"
-              rel="noreferrer"
-              class="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-6 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/20"
-            >
-              Join the Live Playlist
-            </a>
+            <a href="#rsvp" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02]">RSVP + Add Your Tune</a>
+            <a href="https://open.spotify.com/playlist/5zoLTvPiOJmtddXp5974LU?si=iznxLaADSxehnSsx9tlPxg&pt=e7c4ecf5fb827eac9505e95994d8458e&pi=sujaHzBpT0SQ0" target="_blank" rel="noreferrer" class="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-6 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/20">Join the Live Playlist</a>
           </div>
         </div>
 
@@ -110,22 +114,16 @@
                 <p class="text-xs uppercase tracking-[0.35em] text-white/50">Special Guests</p>
                 <h2 class="mt-2 text-2xl font-bold text-orange-100">Peculiar Pizza</h2>
               </div>
-              <div class="rounded-full border border-orange-200/20 bg-orange-200/10 px-4 py-2 text-xs uppercase tracking-[0.3em] text-orange-100">
-                IFKYK
-              </div>
+              <div class="rounded-full border border-orange-200/20 bg-orange-200/10 px-4 py-2 text-xs uppercase tracking-[0.3em] text-orange-100">IFKYK</div>
             </div>
-
             <div class="space-y-4 text-white/80">
-              <p>
-                Award-winning pizzas, triumphant return energy, and exactly the kind of food situation that makes people suddenly stay three hours longer than planned.
-              </p>
+              <p>Triumphant return of the award winning mobile pizzeria, you wont be disappointed.</p>
               <p>Bring your own libations. Leave the rest to us.</p>
             </div>
-
             <div class="mt-6 grid gap-4 sm:grid-cols-2">
               <div class="rounded-2xl border border-white/10 bg-slate-950/20 p-4">
                 <p class="text-xs uppercase tracking-[0.3em] text-white/45">Food</p>
-                <p class="mt-2 font-medium">Handled beautifully</p>
+                <p class="mt-2 font-medium">Handmade with passion</p>
               </div>
               <div class="rounded-2xl border border-white/10 bg-slate-950/20 p-4">
                 <p class="text-xs uppercase tracking-[0.3em] text-white/45">Drinks</p>
@@ -140,25 +138,17 @@
         <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur">
           <p class="text-xs uppercase tracking-[0.35em] text-pink-100/70">The Brief</p>
           <h3 class="mt-3 text-2xl font-bold">Sunshine. Soundtrack. Pizza.</h3>
-          <p class="mt-4 leading-7 text-white/75">
-            A garden party with a little neon heat at the edges. Relaxed, polished, and not remotely shy.
-          </p>
+          <p class="mt-4 leading-7 text-white/75">A garden party with a little neon heat at the edges. Relaxed, polished, and not remotely shy.</p>
         </div>
-
         <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur">
           <p class="text-xs uppercase tracking-[0.35em] text-orange-100/70">Music Policy</p>
           <h3 class="mt-3 text-2xl font-bold">Live Playlist Energy</h3>
-          <p class="mt-4 leading-7 text-white/75">
-            The Hayward Bound playlist is live before, during, and after the party. Add your tracks, shape the vibe, and keep the soundtrack evolving all day. If you don't like it, you've got to add to it.
-          </p>
+          <p class="mt-4 leading-7 text-white/75">The Hayward Bound playlist is live before, during, and after the party. Add your tracks, shape the vibe, and keep the soundtrack evolving all day. If you don't like it, you've got to add to it.</p>
         </div>
-
         <div class="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur">
           <p class="text-xs uppercase tracking-[0.35em] text-cyan-100/70">Guest Notes</p>
           <h3 class="mt-3 text-2xl font-bold">Dietaries welcome</h3>
-          <p class="mt-4 leading-7 text-white/75">
-            Let us know what you can and cannot eat, and we'll make sure the pizza plan has range.
-          </p>
+          <p class="mt-4 leading-7 text-white/75">Let us know what you can and cannot eat, and we'll make sure the pizza plan has range.</p>
         </div>
       </section>
 
@@ -166,41 +156,23 @@
         <div class="rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-8 backdrop-blur">
           <p class="text-xs uppercase tracking-[0.35em] text-white/50">RSVP</p>
           <h2 class="mt-3 text-4xl font-bold">Claim your spot</h2>
-          <p class="mt-4 max-w-xl leading-7 text-white/75">
-            RSVP to Matt, let us know your dietary requirements, and tell us the tune that absolutely has to make the cut.
-          </p>
+          <p class="mt-4 max-w-xl leading-7 text-white/75">RSVP to Matt, let us know your dietary requirements, and tell us the tune that absolutely has to make the cut.</p>
 
           <form class="mt-8 space-y-4" id="rsvpForm">
             <div class="grid gap-4 sm:grid-cols-2">
               <label class="block">
                 <span class="mb-2 block text-sm text-white/70">Name</span>
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="Your good name"
-                  required
-                  class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-pink-200/40"
-                />
+                <input name="name" type="text" placeholder="Your good name" required class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-pink-200/40" />
               </label>
               <label class="block">
                 <span class="mb-2 block text-sm text-white/70">Email</span>
-                <input
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  required
-                  class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-pink-200/40"
-                />
+                <input name="email" type="email" placeholder="you@example.com" required class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-pink-200/40" />
               </label>
             </div>
-
             <div class="grid gap-4 sm:grid-cols-2">
               <label class="block">
                 <span class="mb-2 block text-sm text-white/70">Attending?</span>
-                <select
-                  name="attending"
-                  class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white outline-none transition focus:border-pink-200/40"
-                >
+                <select name="attending" class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white outline-none transition focus:border-pink-200/40">
                   <option>Absolutely</option>
                   <option>Regretfully no</option>
                   <option>Need to confirm</option>
@@ -208,48 +180,30 @@
               </label>
               <label class="block">
                 <span class="mb-2 block text-sm text-white/70">Guests</span>
-                <input
-                  name="guests"
-                  type="number"
-                  min="1"
-                  value="1"
-                  class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-pink-200/40"
-                />
+                <input name="guests" type="number" min="1" value="1" class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-pink-200/40" />
               </label>
             </div>
-
             <label class="block">
               <span class="mb-2 block text-sm text-white/70">Dietary requirements</span>
-              <textarea
-                name="dietary"
-                rows="4"
-                placeholder="Vegetarian, gluten-free, allergies, or anything else we should know"
-                class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-pink-200/40"
-              ></textarea>
+              <textarea name="dietary" rows="4" placeholder="Vegetarian, gluten-free, allergies, or anything else we should know" class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-pink-200/40"></textarea>
             </label>
 
+            <!-- Tune field with improved Spotify button -->
             <div class="block">
               <span class="mb-2 block text-sm text-white/70">Favourite tune</span>
-              <div class="flex gap-2">
-                <input
-                  name="tune"
-                  id="tuneInput"
-                  type="text"
-                  placeholder="Artist - Track"
-                  class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-cyan-200/40"
-                />
-                <button
-                  type="button"
-                  id="addToPlaylistBtn"
-                  title="Add to Spotify playlist"
-                  class="flex-shrink-0 rounded-2xl border border-cyan-200/30 bg-cyan-200/10 px-4 py-3 text-cyan-100 transition hover:bg-cyan-200/20 disabled:opacity-40"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-                  </svg>
-                </button>
+              <div class="flex gap-2 items-stretch">
+                <input name="tune" id="tuneInput" type="text" placeholder="Artist – Track" class="w-full rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-white placeholder:text-white/30 outline-none transition focus:border-cyan-200/40" />
+                <div class="spotify-wrap flex-shrink-0">
+                  <button type="button" id="addToPlaylistBtn" class="h-full rounded-2xl border border-cyan-200/30 bg-cyan-200/10 px-4 py-3 text-cyan-100 transition hover:bg-cyan-200/20 flex items-center gap-2 text-sm font-medium whitespace-nowrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                    </svg>
+                    <span class="hidden sm:inline">Add to playlist</span>
+                  </button>
+                  <span class="tip">Type your track, then click to find it on Spotify</span>
+                </div>
               </div>
-              <p class="mt-2 text-xs text-white/40">Pop your track in, then hit the Spotify button to add it to the live playlist.</p>
+              <p class="mt-2 text-xs text-white/40">Type your track above, hit the button — we'll open Spotify so you can add it to the live playlist.</p>
             </div>
 
             <div class="rounded-2xl border border-cyan-200/15 bg-cyan-200/10 p-4 text-sm leading-7 text-cyan-50/90">
@@ -257,31 +211,12 @@
             </div>
 
             <div class="flex flex-wrap gap-3 pt-2">
-              <button
-                type="submit"
-                id="submitBtn"
-                class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                Send RSVP
-              </button>
-              <a
-                href="mailto:Matt101hayward@gmail.com?subject=Hayward%20Bound%202026%20RSVP"
-                class="rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/20"
-              >
-                RSVP by Email Instead
-              </a>
-              <a
-                href="https://open.spotify.com/playlist/5zoLTvPiOJmtddXp5974LU?si=iznxLaADSxehnSsx9tlPxg&pt=e7c4ecf5fb827eac9505e95994d8458e&pi=sujaHzBpT0SQ0"
-                target="_blank"
-                rel="noreferrer"
-                class="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-6 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/20"
-              >
-                Add Tracks to the Live Playlist
-              </a>
+              <button type="submit" id="submitBtn" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-70">Send RSVP</button>
+              <a href="mailto:Matt101hayward@gmail.com?subject=Hayward%20Bound%202026%20RSVP" class="rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/20">RSVP by Email Instead</a>
+              <a href="https://open.spotify.com/playlist/5zoLTvPiOJmtddXp5974LU?si=iznxLaADSxehnSsx9tlPxg&pt=e7c4ecf5fb827eac9505e95994d8458e&pi=sujaHzBpT0SQ0" target="_blank" rel="noreferrer" class="rounded-full border border-cyan-200/30 bg-cyan-200/10 px-6 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/20">Add Tracks to the Live Playlist</a>
             </div>
 
             <div id="statusBox" class="hidden rounded-2xl border p-4 text-sm leading-7"></div>
-
             <p class="pt-2 text-sm text-white/55">RSVP email: Matt101hayward@gmail.com</p>
           </form>
         </div>
@@ -314,7 +249,6 @@
 
     <script>
       const SPOTIFY_PLAYLIST_URL = "https://open.spotify.com/playlist/5zoLTvPiOJmtddXp5974LU?si=iznxLaADSxehnSsx9tlPxg&pt=e7c4ecf5fb827eac9505e95994d8458e&pi=sujaHzBpT0SQ0";
-
       const form = document.getElementById("rsvpForm");
       const submitBtn = document.getElementById("submitBtn");
       const statusBox = document.getElementById("statusBox");
@@ -322,27 +256,21 @@
       const addToPlaylistBtn = document.getElementById("addToPlaylistBtn");
       const scriptUrl = "https://script.google.com/macros/s/AKfycbx1VdWW31_iWZBU7vknlzNFLFVw8wpp5B_HeWtXQd2MDhVQPEtQh2PyP3IuajxMwsakxA/exec";
 
-      // Open Spotify search for the tune in a new tab, then land on the playlist
       addToPlaylistBtn.addEventListener("click", () => {
         const tune = tuneInput.value.trim();
         if (!tune) {
           tuneInput.focus();
           tuneInput.placeholder = "Pop your track in first ↑";
-          setTimeout(() => { tuneInput.placeholder = "Artist - Track"; }, 2500);
+          setTimeout(() => { tuneInput.placeholder = "Artist – Track"; }, 2500);
           return;
         }
-        const searchQuery = encodeURIComponent(tune);
-        // Open Spotify search so they can find and add the track, then open the playlist
-        window.open(`https://open.spotify.com/search/${searchQuery}`, "_blank");
-        setTimeout(() => {
-          window.open(SPOTIFY_PLAYLIST_URL, "_blank");
-        }, 800);
+        window.open("https://open.spotify.com/search/" + encodeURIComponent(tune), "_blank");
+        setTimeout(() => { window.open(SPOTIFY_PLAYLIST_URL, "_blank"); }, 800);
       });
 
       function showStatus(type, message) {
         statusBox.className = "rounded-2xl border p-4 text-sm leading-7";
         statusBox.classList.remove("hidden");
-
         if (type === "success") {
           statusBox.classList.add("border-emerald-300/20", "bg-emerald-300/10", "text-emerald-50");
         } else if (type === "error") {
@@ -350,7 +278,6 @@
         } else {
           statusBox.classList.add("border-white/10", "bg-white/5", "text-white/75");
         }
-
         statusBox.textContent = message;
       }
 
@@ -359,29 +286,20 @@
         submitBtn.disabled = true;
         submitBtn.textContent = "Sending RSVP...";
         showStatus("loading", "Sending your RSVP into the sunset...");
-
         const formData = new FormData(form);
         const payload = Object.fromEntries(formData.entries());
-
         try {
           const response = await fetch(scriptUrl, {
             method: "POST",
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8",
-            },
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(payload),
           });
-
           const result = await response.json();
-
-          if (!result.success) {
-            throw new Error("Submission failed");
-          }
-
+          if (!result.success) throw new Error("Submission failed");
           form.reset();
           const guestsInput = form.querySelector('input[name="guests"]');
           if (guestsInput) guestsInput.value = "1";
-          showStatus("success", "You're on the list. Sunset awaits.");
+          showStatus("success", "You're on the list. Sunset awaits. A confirmation email is on its way to you.");
         } catch (error) {
           showStatus("error", "That didn't quite land. You can still RSVP by email while we straighten the deckchairs.");
         } finally {
